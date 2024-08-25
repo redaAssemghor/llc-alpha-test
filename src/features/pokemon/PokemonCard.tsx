@@ -8,8 +8,10 @@ import { FaHeart } from "react-icons/fa";
 const PokemonCard: React.FC<{ name: string }> = ({ name }) => {
   const { data: pokemon, isLoading, error } = useGetPokemonByIdQuery(name);
   const dispatch = useDispatch();
-  const isLiked = useSelector(
-    (state: RootedState) => state.likedPokemons.likedPokemons[pokemon?.id || 0]
+
+  // Check if the current Pokemon's name is in the likedPokemons array
+  const isLiked = useSelector((state: RootedState) =>
+    state.pokemonActions.likedPokemons.includes(pokemon?.name || "")
   );
 
   if (isLoading) return <div>Loading {name}...</div>;
@@ -17,12 +19,16 @@ const PokemonCard: React.FC<{ name: string }> = ({ name }) => {
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    dispatch(toggleLike(pokemon!.id));
+    if (pokemon?.name) {
+      dispatch(toggleLike(pokemon.name));
+    }
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    dispatch(deletePokemon(pokemon!.name));
+    if (pokemon?.name) {
+      dispatch(deletePokemon(pokemon.name));
+    }
   };
 
   return (

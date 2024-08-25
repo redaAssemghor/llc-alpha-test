@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { pokemonApi } from "../features/pokemon/pokemonApi";
-import likedPokemonsReducer from "../features/actions/pokemonActionsSlice";
+import pokemonActionsReducer from "../features/actions/pokemonActionsSlice";
 
 export const store = configureStore({
   reducer: {
     [pokemonApi.reducerPath]: pokemonApi.reducer,
-    likedPokemons: likedPokemonsReducer,
+    pokemonActions: pokemonActionsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(pokemonApi.middleware),
