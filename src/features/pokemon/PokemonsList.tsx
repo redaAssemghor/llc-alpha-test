@@ -1,22 +1,30 @@
+import { useEffect } from "react";
+import { RootedState } from "../../store/store";
 import { useGetPokemonsQuery } from "./pokemonApi";
 import PokemonCard from "./PokemonCard";
-import React from "react";
+import { useSelector } from "react-redux";
 
 const PokemonsList: React.FC = () => {
   const { data: pokemonList, isLoading, error } = useGetPokemonsQuery();
+  const deletedPokemons = useSelector(
+    (state: RootedState) => state.likedPokemons.deletedPokemons
+  );
 
-  if (isLoading)
-    return <div className="text-center text-gray-500">Loading...</div>;
-  if (error)
-    return (
-      <div className="text-center text-red-500">Error fetching Pokémon</div>
-    );
+  useEffect(() => {
+    console.log("deletedPokemons", deletedPokemons);
+    console.log("pokemonList", pokemonList);
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching Pokémon</div>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-      {pokemonList?.results.map((pokemon) => (
-        <PokemonCard key={pokemon.name} name={pokemon.name} />
-      ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {pokemonList?.results
+        .filter((pokemon) => !deletedPokemons.includes(pokemon.name))
+        .map((pokemon) => (
+          <PokemonCard key={pokemon.name} name={pokemon.name} />
+        ))}
     </div>
   );
 };

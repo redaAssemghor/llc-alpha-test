@@ -1,30 +1,56 @@
 import { Link } from "react-router-dom";
 import { useGetPokemonByIdQuery } from "./pokemonApi";
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleLike, deletePokemon } from "../actions/pokemonActionsSlice";
+import { RootedState } from "../../store/store";
+import { FaHeart } from "react-icons/fa";
 
 const PokemonCard: React.FC<{ name: string }> = ({ name }) => {
   const { data: pokemon, isLoading, error } = useGetPokemonByIdQuery(name);
+  const dispatch = useDispatch();
+  const isLiked = useSelector(
+    (state: RootedState) => state.likedPokemons.likedPokemons[pokemon?.id || 0]
+  );
 
-  if (isLoading)
-    return <div className="text-center text-gray-500">Loading {name}...</div>;
-  if (error)
-    return <div className="text-center text-red-500">Error loading {name}</div>;
+  if (isLoading) return <div>Loading {name}...</div>;
+  if (error) return <div>Error loading {name}</div>;
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch(toggleLike(pokemon!.id));
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    dispatch(deletePokemon(pokemon!.name));
+  };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
-      <Link to={`/pokemon/${pokemon?.id}`}>
-        <h3 className="text-lg font-semibold text-gray-800 capitalize">
-          {pokemon?.name}
-        </h3>
+    <div className="card bg-white shadow-md rounded-md p-4 hover:shadow-lg transition-shadow duration-300">
+      <Link to={`/pokemon/${pokemon?.id}`} className="block text-center">
+        <h3 className="text-xl font-bold capitalize">{pokemon?.name}</h3>
         <img
-          className="w-32 h-32 mx-auto my-4"
           src={pokemon?.sprites.front_default}
           alt={pokemon?.name}
+          className="mx-auto"
         />
-        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200">
-          Like
-        </button>
       </Link>
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={handleLike}
+          className={`text-2xl ${
+            isLiked ? "text-red-500" : "text-gray-500"
+          } transition-colors duration-200`}
+        >
+          <FaHeart />
+        </button>
+        <button
+          onClick={handleDelete}
+          className="text-xl text-gray-700 hover:text-red-600 transition-colors duration-200"
+        >
+          🗑️
+        </button>
+      </div>
     </div>
   );
 };
