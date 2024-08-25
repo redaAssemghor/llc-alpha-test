@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetPokemonByIdQuery } from "../features/pokemon/pokemonApi";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 const PokemonDetail: React.FC = () => {
   const { name } = useParams<{ name: string }>();
@@ -39,9 +40,9 @@ const PokemonDetail: React.FC = () => {
       </ul>
       <button
         onClick={() => window.history.back()}
-        className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200"
+        className="mt-10 bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 text-2xl rounded-lg transition-colors duration-200"
       >
-        Go Back
+        <IoChevronBackOutline />
       </button>
     </div>
   );

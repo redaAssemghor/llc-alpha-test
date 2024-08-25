@@ -3,13 +3,12 @@ import { useGetPokemonByIdQuery } from "./pokemonApi";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleLike, deletePokemon } from "../actions/pokemonActionsSlice";
 import { RootedState } from "../../store/store";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegTrashAlt } from "react-icons/fa";
 
 const PokemonCard: React.FC<{ name: string }> = ({ name }) => {
   const { data: pokemon, isLoading, error } = useGetPokemonByIdQuery(name);
   const dispatch = useDispatch();
 
-  // Check if the current Pokemon's name is in the likedPokemons array
   const isLiked = useSelector((state: RootedState) =>
     state.pokemonActions.likedPokemons.includes(pokemon?.name || "")
   );
@@ -52,9 +51,9 @@ const PokemonCard: React.FC<{ name: string }> = ({ name }) => {
         </button>
         <button
           onClick={handleDelete}
-          className="text-xl text-gray-700 hover:text-red-600 transition-colors duration-200"
+          className="text-2xl text-gray-700 hover:text-red-600 transition-colors duration-200"
         >
-          🗑️
+          <FaRegTrashAlt />
         </button>
       </div>
     </div>
